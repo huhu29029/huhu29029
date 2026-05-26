@@ -1,0 +1,218 @@
+:root {
+  color: #242424;
+  background: #f4f1ec;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 980px;
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 280px minmax(420px, 1fr) 340px;
+  min-height: 100vh;
+}
+
+.sidebar,
+.inspector {
+  background: #fbfaf7;
+  border-color: #d9d2c6;
+  padding: 20px;
+}
+
+.sidebar {
+  border-right: 1px solid #d9d2c6;
+}
+
+.inspector {
+  border-left: 1px solid #d9d2c6;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.brand-mark {
+  align-items: center;
+  background: #1d4d4f;
+  border-radius: 8px;
+  color: #fff;
+  display: flex;
+  font-weight: 800;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.brand h1,
+.brand p,
+.nav-section h2,
+.chapter-header p,
+.chapter-header h2,
+.panel h2,
+.panel p {
+  margin: 0;
+}
+
+.brand h1 {
+  font-size: 16px;
+}
+
+.brand p,
+.chapter-header p,
+.project-button span,
+.chapter-button span,
+.character-row span,
+.thread-row span {
+  color: #706b63;
+  font-size: 13px;
+}
+
+.nav-section {
+  margin-top: 24px;
+}
+
+.nav-section h2,
+.panel h2 {
+  color: #4b4740;
+  font-size: 13px;
+  letter-spacing: 0;
+  margin-bottom: 10px;
+}
+
+.project-button,
+.chapter-button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.project-button {
+  flex-direction: column;
+  padding: 12px;
+}
+
+.chapter-button {
+  align-items: center;
+  padding: 10px 12px;
+}
+
+.project-button.active,
+.chapter-button.active {
+  background: #edf5f2;
+  border-color: #9fc4bb;
+}
+
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chapter-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chapter-header {
+  align-items: center;
+  border-bottom: 1px solid #d9d2c6;
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 32px;
+}
+
+.chapter-header h2 {
+  font-size: 24px;
+  margin-top: 4px;
+}
+
+.chapter-header > span {
+  background: #ffffff;
+  border: 1px solid #d9d2c6;
+  border-radius: 999px;
+  color: #4b4740;
+  padding: 6px 12px;
+}
+
+.chapter-content {
+  color: #2f2c28;
+  font-size: 17px;
+  line-height: 1.85;
+  margin: 0 auto;
+  max-width: 780px;
+  padding: 42px 32px;
+  width: 100%;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #d9d2c6;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.panel p {
+  color: #4b4740;
+  line-height: 1.6;
+}
+
+.character-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.character-row,
+.thread-row {
+  border-top: 1px solid #ece6dc;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 10px;
+}
+
+@media (max-width: 1100px) {
+  body {
+    min-width: 0;
+  }
+
+  .app-shell {
+    grid-template-columns: 240px minmax(360px, 1fr);
+  }
+
+  .inspector {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid #d9d2c6;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

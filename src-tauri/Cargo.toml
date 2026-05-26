@@ -1,0 +1,19 @@
+[package]
+name = "novel-memory-engine"
+version = "0.1.0"
+description = "A local outline and memory manager for long-form novel authors."
+authors = ["Novel Memory Engine Contributors"]
+edition = "2021"
+
+[lib]
+name = "novel_memory_engine_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+rusqlite = { version = "0.31", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = [] }
