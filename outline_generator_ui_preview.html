@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小说大纲生成界面 UI 原型</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --panel: #fbfaf7;
+      --paper: #fffdf8;
+      --line: #ded5c8;
+      --line-soft: #ece4d9;
+      --text: #2c2925;
+      --muted: #8f8171;
+      --accent: #7c5f3f;
+      --accent-2: #b68a55;
+      --danger: #a94438;
+      --blue: #617e9b;
+      --purple: #8067aa;
+      --green: #5f845f;
+      --shadow: 0 22px 70px rgba(77, 55, 31, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #174d4c;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      letter-spacing: .05em;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 900;
+      margin-bottom: 3px;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .nav-section {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .section-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin: 0 0 8px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #5e5247;
+      margin-bottom: 5px;
+      border: 1px solid transparent;
+    }
+
+    .nav-item.active {
+      background: #efe2ce;
+      border-color: #d5bea0;
+      color: #463623;
+      font-weight: 800;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+    }
+
+    .book-card {
+      margin: 14px 12px;
+      padding: 14px;
+      border: 1px solid #d8cbb9;
+      background: #fffdf8;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(77, 55, 31, .06);
+    }
+
+    .book-title {
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .book-meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .chapter-list {
+      flex: 1;
+      overflow: auto;
+      padding: 0 12px 18px;
+    }
+
+    .volume {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9a8c7b;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .chapter {
+      padding: 8px 10px;
+      margin: 4px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #5a4d40;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .chapter.active {
+      background: #f1e7d7;
+      color: #3a2d20;
+      font-weight: 800;
+    }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 64px 1fr;
+      height: 100vh;
+    }
+
+    .topbar {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+    }
+
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .page-title {
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    button {
+      border: none;
+      background: #eee5d5;
+      color: #4d4234;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    button:hover { filter: brightness(.98); transform: translateY(-1px); }
+    button.primary { background: var(--accent); color: #fffaf3; }
+    button.ghost { background: transparent; border: 1px solid #dfd3c3; }
+    button.danger { background: #f0ddd7; color: var(--danger); }
+
+    .content {
+      display: grid;
+      grid-template-columns: minmax(430px, .92fr) minmax(520px, 1.08fr);
+      gap: 16px;
+      padding: 16px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .outline-panel, .mind-panel {
+      min-width: 0;
+      min-height: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 12px 50px rgba(77, 55, 31, .06);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+    }
+
+    .panel-header {
+      height: 54px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fffdf8;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .panel-tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 10px 12px 0;
+      background: #fffdf8;
+      border-bottom: 1px solid var(--line-soft);
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 9px 12px;
+      border-radius: 12px 12px 0 0;
+      color: #7d6e5f;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-bottom: none;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: var(--panel);
+      border-color: var(--line-soft);
+      color: #4d3926;
+      font-weight: 900;
+    }
+
+    .text-area-wrap {
+      padding: 16px;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+    }
+
+    .outline-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .meta-card {
+      background: #fffdf8;
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      font-weight: 900;
+      color: #5d452d;
+    }
+
+    .outline-editor {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      border: 1px solid #e2d7c8;
+      border-radius: 16px;
+      outline: none;
+      resize: none;
+      background: #fffdf8;
+      padding: 18px 20px;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      font-size: 15px;
+      line-height: 1.9;
+      color: #332d27;
+      box-shadow: inset 0 2px 16px rgba(80, 61, 40, .03);
+    }
+
+    .outline-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .mind-panel {
+      grid-template-rows: auto 1fr;
+      position: relative;
+    }
+
+    .mind-body {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      min-height: 0;
+    }
+
+    .mind-canvas {
+      position: relative;
+      overflow: hidden;
+      background-image: linear-gradient(#eadfce 1px, transparent 1px), linear-gradient(90deg, #eadfce 1px, transparent 1px);
+      background-size: 28px 28px;
+      background-color: #fbf7ef;
+    }
+
+    .canvas-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .mind-node {
+      position: absolute;
+      z-index: 2;
+      width: 160px;
+      background: #fffdf8;
+      border: 1px solid #cdb698;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 12px 30px rgba(84, 63, 41, .12);
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    .mind-node:hover, .mind-node.selected {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(84, 63, 41, .18);
+    }
+
+    .mind-node.selected {
+      outline: 4px solid rgba(124, 95, 63, .16);
+    }
+
+    .mind-node.world { border-color: var(--green); }
+    .mind-node.character { border-color: var(--purple); }
+    .mind-node.mainline { border-color: var(--accent); }
+    .mind-node.branch { border-color: var(--blue); }
+    .mind-node.foreshadow { border-color: #9a7fc0; }
+    .mind-node.twist { border-color: var(--danger); }
+
+    .node-type {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      margin-bottom: 7px;
+      background: #eee1cc;
+      color: #765535;
+      font-weight: 800;
+    }
+
+    .mind-node.world .node-type { background: #dfeedd; color: #4d7755; }
+    .mind-node.character .node-type { background: #e8def4; color: #66508c; }
+    .mind-node.branch .node-type { background: #dce8f1; color: #4c6d87; }
+    .mind-node.foreshadow .node-type { background: #e8def4; color: #66508c; }
+    .mind-node.twist .node-type { background: #f2dcd6; color: var(--danger); }
+
+    .node-title {
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .node-desc {
+      font-size: 11px;
+      color: #74685c;
+      line-height: 1.55;
+    }
+
+    .node-center { left: 360px; top: 210px; width: 190px; border-width: 2px; }
+    .node-a { left: 80px; top: 80px; }
+    .node-b { left: 360px; top: 62px; }
+    .node-c { right: 90px; top: 96px; }
+    .node-d { right: 84px; bottom: 110px; }
+    .node-e { left: 132px; bottom: 90px; }
+    .node-f { left: 420px; bottom: 70px; }
+
+    .mind-side {
+      border-left: 1px solid var(--line-soft);
+      background: #fffdf8;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .side-block {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .side-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .side-title {
+      font-size: 16px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .side-text {
+      font-size: 13px;
+      color: #5f554c;
+      line-height: 1.75;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eee5d5;
+      color: #765535;
+    }
+
+    .parse-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgba(42, 32, 24, .28);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .parse-panel.show { display: flex; }
+
+    .modal {
+      width: 560px;
+      background: #fffdf8;
+      border: 1px solid #d9ccba;
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      height: 58px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title { font-size: 17px; font-weight: 900; }
+    .modal-body { padding: 20px; }
+
+    .parse-options {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .parse-option {
+      border: 1px solid #e1d6c8;
+      border-radius: 16px;
+      padding: 14px;
+      cursor: pointer;
+      background: #fbf7ef;
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .parse-option.active {
+      border-color: var(--accent-2);
+      background: #f3e8d7;
+    }
+
+    .radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #c7aa83;
+      margin-top: 2px;
+      position: relative;
+    }
+
+    .parse-option.active .radio::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .option-title { font-size: 14px; font-weight: 900; margin-bottom: 5px; }
+    .option-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    .selector-box {
+      border: 1px solid var(--line-soft);
+      background: #fffaf1;
+      border-radius: 14px;
+      padding: 12px;
+      display: none;
+    }
+
+    .selector-box.show { display: block; }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      padding: 5px 0;
+    }
+
+    .modal-footer {
+      padding: 14px 20px 18px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(38, 30, 24, .92);
+      color: white;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 13px;
+      opacity: 0;
+      transition: .2s;
+      z-index: 30;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">NM</div>
+        <div>
+          <div class="brand-title">Novel Memory Engine</div>
+          <div class="brand-subtitle">长篇小说大纲管理</div>
+        </div>
+      </div>
+
+      <div class="book-card">
+        <div class="book-title">求求你再让我学十分钟吧</div>
+        <div class="book-meta">分类：奇幻小说<br />当前：第一卷 · 第六章<br />总字数：327,680</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="section-label">功能</div>
+        <div class="nav-item"><span class="nav-icon">✍</span>正文编辑</div>
+        <div class="nav-item active"><span class="nav-icon">🧠</span>小说大纲</div>
+        <div class="nav-item"><span class="nav-icon">🧵</span>伏笔线索</div>
+        <div class="nav-item"><span class="nav-icon">👤</span>人物管理</div>
+        <div class="nav-item"><span class="nav-icon">📈</span>情绪曲线</div>
+      </div>
+
+      <div class="chapter-list">
+        <div class="section-label">解析范围预览</div>
+        <div class="volume">第一卷 · 圣格兰中学</div>
+        <div class="chapter active"><span>第二章</span><span>已解析</span></div>
+        <div class="chapter"><span>第四章</span><span>待更新</span></div>
+        <div class="chapter"><span>第五章</span><span>待解析</span></div>
+        <div class="chapter"><span>第六章</span><span>待解析</span></div>
+        <div class="volume">第二卷 · 期末试炼</div>
+        <div class="chapter"><span>第七章</span><span>未解析</span></div>
+        <div class="chapter"><span>第八章</span><span>未解析</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="top-left">
+          <div class="page-title">小说大纲生成</div>
+          <div class="page-subtitle">先管理文字大纲与思维导图；后续接入 AI 后可从正文自动解析更新</div>
+        </div>
+        <div class="top-actions">
+          <button id="parseBtn" class="primary">解析正文</button>
+          <button id="syncMindBtn">由文字生成导图</button>
+          <button id="saveBtn" class="ghost">保存大纲</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <section class="outline-panel">
+          <div class="panel-header">
+            <div class="panel-title">文字大纲区</div>
+            <div class="panel-tools">
+              <button id="clearTextBtn" class="ghost">清空</button>
+              <button id="mockFillBtn">示例填充</button>
+            </div>
+          </div>
+
+          <div class="tabs" id="outlineTabs">
+            <div class="tab active" data-tab="world">世界观</div>
+            <div class="tab" data-tab="mainCharacters">主要人物</div>
+            <div class="tab" data-tab="roles">主要角色</div>
+            <div class="tab" data-tab="mainPlot">主线剧情</div>
+            <div class="tab" data-tab="branchPlot">支线剧情</div>
+          </div>
+
+          <div class="text-area-wrap">
+            <div class="outline-meta">
+              <div class="meta-card">
+                <div class="meta-label">当前页</div>
+                <div class="meta-value" id="currentTabName">世界观</div>
+              </div>
+              <div class="meta-card">
+                <div class="meta-label">字数</div>
+                <div class="meta-value" id="outlineWordCount">182</div>
+              </div>
+              <div class="meta-card">
+                <div class="meta-label">状态</div>
+                <div class="meta-value" id="saveState">已保存</div>
+              </div>
+            </div>
+
+            <textarea class="outline-editor" id="outlineEditor">世界背景：
+智慧之神建立了以考试、绩点、圣典和神恩等级为核心的学院制度。学生的成绩不仅决定学业，也决定交通、饮食、住宿等生活资源。
+
+核心矛盾：
+世界表面上崇尚知识，实际上通过“标准答案”和“考试秩序”压制真正的思考。主角薇尔莉特拥有“知识回廊”，能够通过变量实验绕开神学解释，重新理解魔法规律。
+
+重要设定：
+1. 安乐区：被剥夺学习资格者的最终去处。
+2. 清醒符咒：维持学生学习效率的消耗品。
+3. 神恩信用：与成绩绑定的社会资源等级。</textarea>
+
+            <div class="outline-footer">
+              <span>支持直接手动编辑；后续 AI 解析正文后会写入当前分页。</span>
+              <span id="lastSaved">最后保存：12:48</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="mind-panel">
+          <div class="panel-header">
+            <div class="panel-title">思维导图区</div>
+            <div class="panel-tools">
+              <button id="addNodeBtn">＋节点</button>
+              <button id="layoutBtn">自动整理</button>
+              <button id="fitBtn" class="ghost">适应窗口</button>
+            </div>
+          </div>
+
+          <div class="mind-body">
+            <div class="mind-canvas" id="mindCanvas">
+              <svg class="canvas-svg" viewBox="0 0 900 640" preserveAspectRatio="none">
+                <path d="M450 300 C360 230, 275 175, 170 150" stroke="#5f845f" stroke-width="4" fill="none" stroke-linecap="round" />
+                <path d="M450 300 C450 210, 450 150, 450 120" stroke="#8067aa" stroke-width="4" fill="none" stroke-linecap="round" />
+                <path d="M450 300 C560 220, 660 185, 740 160" stroke="#7c5f3f" stroke-width="4" fill="none" stroke-linecap="round" />
+                <path d="M450 300 C570 340, 672 408, 748 498" stroke="#617e9b" stroke-width="3" fill="none" stroke-dasharray="8 7" stroke-linecap="round" />
+                <path d="M450 300 C340 375, 240 470, 200 520" stroke="#8067aa" stroke-width="3" fill="none" stroke-dasharray="5 7" stroke-linecap="round" />
+                <path d="M450 300 C450 430, 460 510, 500 546" stroke="#a94438" stroke-width="4" fill="none" stroke-linecap="round" />
+              </svg>
+
+              <div class="mind-node mainline node-center selected" data-title="全书核心" data-type="总纲" data-desc="差生主角在压迫式知识秩序中，通过知识回廊重建魔法理解，逐步接近世界真相。">
+                <span class="node-type">总纲</span>
+                <div class="node-title">全书核心</div>
+                <div class="node-desc">知识不是服从，而是理解世界的方法。</div>
+              </div>
+
+              <div class="mind-node world node-a" data-title="学院制度" data-type="世界观" data-desc="成绩决定资源，考试制度被神权化，学习被包装为灵魂筛选。">
+                <span class="node-type">世界观</span>
+                <div class="node-title">学院制度</div>
+                <div class="node-desc">绩点、神恩、圣典、安乐区。</div>
+              </div>
+
+              <div class="mind-node character node-b" data-title="薇尔莉特" data-type="主要人物" data-desc="原本濒临淘汰的差生，拥有知识回廊后开始用变量实验理解魔法。">
+                <span class="node-type">主要人物</span>
+                <div class="node-title">薇尔莉特</div>
+                <div class="node-desc">差生，吐槽役，逐渐掌握真理。</div>
+              </div>
+
+              <div class="mind-node mainline node-c" data-title="主线推进" data-type="主线剧情" data-desc="从补课、悬浮术、知识回廊开始，主角意识到圣典解释并不是唯一真理。">
+                <span class="node-type">主线</span>
+                <div class="node-title">主线推进</div>
+                <div class="node-desc">悬浮术 → 变量 → 密度 → 知识回廊。</div>
+              </div>
+
+              <div class="mind-node branch node-d" data-title="伊芙琳支线" data-type="支线剧情" data-desc="伊芙琳以极端卷王方式关心主角，后续可承担学院秩序与个人情感的冲突。">
+                <span class="node-type">支线</span>
+                <div class="node-title">伊芙琳支线</div>
+                <div class="node-desc">学霸补课，冷淡关心，潜在冲突。</div>
+              </div>
+
+              <div class="mind-node foreshadow node-e" data-title="安乐区伏笔" data-type="伏笔" data-desc="安乐区并非单纯社会底层，而可能和知识筛选制度的真实目的有关。">
+                <span class="node-type">伏笔</span>
+                <div class="node-title">安乐区伏笔</div>
+                <div class="node-desc">被剥夺学习资格者的去处。</div>
+              </div>
+
+              <div class="mind-node twist node-f" data-title="神学解释反转" data-type="反转" data-desc="悬浮术并非天空神座托举，而是可以通过质量、体积、密度等变量建模理解。">
+                <span class="node-type">反转</span>
+                <div class="node-title">神学解释反转</div>
+                <div class="node-desc">祈祷解释被变量实验突破。</div>
+              </div>
+            </div>
+
+            <aside class="mind-side">
+              <div class="side-block">
+                <div class="side-label">当前选中节点</div>
+                <div class="side-title" id="nodeTitle">全书核心</div>
+                <div class="side-text" id="nodeDesc">差生主角在压迫式知识秩序中，通过知识回廊重建魔法理解，逐步接近世界真相。</div>
+                <div class="tag-row">
+                  <span class="tag" id="nodeTypeTag">总纲</span>
+                  <span class="tag">可编辑</span>
+                </div>
+              </div>
+
+              <div class="side-block">
+                <div class="side-label">节点编辑</div>
+                <input id="nodeTitleInput" style="width:100%;padding:9px 10px;border:1px solid #e1d6c8;border-radius:10px;margin-bottom:8px;background:#fffaf1;" value="全书核心" />
+                <textarea id="nodeDescInput" style="width:100%;height:100px;padding:9px 10px;border:1px solid #e1d6c8;border-radius:10px;background:#fffaf1;resize:none;line-height:1.6;">差生主角在压迫式知识秩序中，通过知识回廊重建魔法理解，逐步接近世界真相。</textarea>
+                <button id="applyNodeBtn" style="margin-top:8px;">应用到节点</button>
+              </div>
+
+              <div class="side-block">
+                <div class="side-label">导图说明</div>
+                <div class="side-text">这里用于展示大纲结构。后续 AI 解析正文后，可以自动生成节点、关系线和剧情分组。</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="parse-panel" id="parsePanel">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">解析正文</div>
+        <button id="closeParseBtn" class="ghost">关闭</button>
+      </div>
+      <div class="modal-body">
+        <div class="parse-options" id="parseOptions">
+          <div class="parse-option active" data-mode="all">
+            <div class="radio"></div>
+            <div>
+              <div class="option-title">解析全文</div>
+              <div class="option-desc">后续接入 AI 后，将基于整本小说的现有章节，增量更新世界观、人物、主线和支线。</div>
+            </div>
+          </div>
+          <div class="parse-option" data-mode="volume">
+            <div class="radio"></div>
+            <div>
+              <div class="option-title">选择分卷解析</div>
+              <div class="option-desc">适合只更新某一卷的剧情阶段，避免影响全书大纲。</div>
+            </div>
+          </div>
+          <div class="parse-option" data-mode="chapter">
+            <div class="radio"></div>
+            <div>
+              <div class="option-title">选择章节解析</div>
+              <div class="option-desc">适合写完新章节后，只让 AI 分析最近几章的变化。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="selector-box" id="rangeSelector">
+          <div class="side-label">选择范围</div>
+          <label class="check-row"><input type="checkbox" checked /> 第一卷 · 圣格兰中学</label>
+          <label class="check-row"><input type="checkbox" /> 第二章</label>
+          <label class="check-row"><input type="checkbox" /> 第四章</label>
+          <label class="check-row"><input type="checkbox" /> 第五章</label>
+          <label class="check-row"><input type="checkbox" /> 第六章</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelParseBtn" class="ghost">取消</button>
+        <button id="startParseBtn" class="primary">开始解析</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">已保存</div>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+    const tabNames = {
+      world: '世界观',
+      mainCharacters: '主要人物',
+      roles: '主要角色',
+      mainPlot: '主线剧情',
+      branchPlot: '支线剧情'
+    };
+
+    const outlineData = {
+      world: `世界背景：\n智慧之神建立了以考试、绩点、圣典和神恩等级为核心的学院制度。学生的成绩不仅决定学业，也决定交通、饮食、住宿等生活资源。\n\n核心矛盾：\n世界表面上崇尚知识，实际上通过“标准答案”和“考试秩序”压制真正的思考。主角薇尔莉特拥有“知识回廊”，能够通过变量实验绕开神学解释，重新理解魔法规律。\n\n重要设定：\n1. 安乐区：被剥夺学习资格者的最终去处。\n2. 清醒符咒：维持学生学习效率的消耗品。\n3. 神恩信用：与成绩绑定的社会资源等级。`,
+      mainCharacters: `薇尔莉特：\n濒临淘汰的差生，吐槽欲强，对学院制度充满本能抗拒。获得知识回廊后，开始通过变量观察理解魔法。\n\n伊芙琳：\n年级第一，极端自律，关心人的方式是压缩对方时间表。她代表学院秩序内的优等生逻辑，但并非反派。`,
+      roles: `奥黛拉女士：\n教师角色，负责体现学院制度的压力。\n\n卡文迪老师：\n世界史教师，通过课堂讲述安乐民制度、圣典体系与知识整肃。\n\n同桌：\n辅助角色，承担课堂提醒和学生群体视角。`,
+      mainPlot: `第一阶段：濒危学生\n薇尔莉特因成绩过低面临被送去安乐区的危机。\n\n第二阶段：补课与悬浮术\n伊芙琳强行介入，为她安排补课。薇尔莉特在知识回廊中重新理解悬浮术。\n\n第三阶段：认知突破\n主角发现魔法不必完全依赖神学解释，变量、质量、体积、密度可以解释悬浮术。`,
+      branchPlot: `伊芙琳支线：\n她以近乎冷酷的方式关心薇尔莉特，但这种关心本身也受到学院秩序塑造。\n\n安乐区支线：\n安乐区表面是落后学生的去处，后续可能揭示其背后隐藏的制度真相。\n\n手机 / 知识回廊支线：\n手机电量恢复后开启知识回廊，为主角提供实验式学习空间。`
+    };
+
+    let activeTab = 'world';
+    let selectedNode = $('.mind-node.selected');
+
+    function showToast(text) {
+      const toast = $('#toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function updateWordCount() {
+      const text = $('#outlineEditor').value || '';
+      const count = text.replace(/\s/g, '').length;
+      $('#outlineWordCount').textContent = count;
+    }
+
+    $$('#outlineTabs .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        outlineData[activeTab] = $('#outlineEditor').value;
+        activeTab = tab.dataset.tab;
+        $$('#outlineTabs .tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        $('#currentTabName').textContent = tabNames[activeTab];
+        $('#outlineEditor').value = outlineData[activeTab];
+        $('#saveState').textContent = '已切换';
+        updateWordCount();
+      });
+    });
+
+    $('#outlineEditor').addEventListener('input', () => {
+      $('#saveState').textContent = '编辑中';
+      updateWordCount();
+    });
+
+    $('#saveBtn').addEventListener('click', () => {
+      outlineData[activeTab] = $('#outlineEditor').value;
+      $('#saveState').textContent = '已保存';
+      $('#lastSaved').textContent = '最后保存：刚刚';
+      showToast('大纲已保存');
+    });
+
+    $('#clearTextBtn').addEventListener('click', () => {
+      if (confirm('确定清空当前分页的大纲内容吗？')) {
+        $('#outlineEditor').value = '';
+        updateWordCount();
+        $('#saveState').textContent = '编辑中';
+      }
+    });
+
+    $('#mockFillBtn').addEventListener('click', () => {
+      $('#outlineEditor').value += '\n\n【新增示例】\n这是手动追加的大纲内容。后续接入 AI 后，可以由解析正文自动生成。';
+      updateWordCount();
+      $('#saveState').textContent = '编辑中';
+    });
+
+    $('#parseBtn').addEventListener('click', () => $('#parsePanel').classList.add('show'));
+    $('#closeParseBtn').addEventListener('click', () => $('#parsePanel').classList.remove('show'));
+    $('#cancelParseBtn').addEventListener('click', () => $('#parsePanel').classList.remove('show'));
+
+    $$('.parse-option').forEach(option => {
+      option.addEventListener('click', () => {
+        $$('.parse-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        const mode = option.dataset.mode;
+        $('#rangeSelector').classList.toggle('show', mode !== 'all');
+      });
+    });
+
+    $('#startParseBtn').addEventListener('click', () => {
+      $('#parsePanel').classList.remove('show');
+      showToast('解析入口已触发：当前仅为 UI 演示');
+    });
+
+    $$('.mind-node').forEach(node => {
+      node.addEventListener('click', () => {
+        if (selectedNode) selectedNode.classList.remove('selected');
+        selectedNode = node;
+        node.classList.add('selected');
+        $('#nodeTitle').textContent = node.dataset.title;
+        $('#nodeDesc').textContent = node.dataset.desc;
+        $('#nodeTypeTag').textContent = node.dataset.type;
+        $('#nodeTitleInput').value = node.dataset.title;
+        $('#nodeDescInput').value = node.dataset.desc;
+      });
+    });
+
+    $('#applyNodeBtn').addEventListener('click', () => {
+      if (!selectedNode) return;
+      const title = $('#nodeTitleInput').value.trim() || '未命名节点';
+      const desc = $('#nodeDescInput').value.trim();
+      selectedNode.dataset.title = title;
+      selectedNode.dataset.desc = desc;
+      selectedNode.querySelector('.node-title').textContent = title;
+      selectedNode.querySelector('.node-desc').textContent = desc;
+      $('#nodeTitle').textContent = title;
+      $('#nodeDesc').textContent = desc;
+      showToast('节点已更新');
+    });
+
+    $('#addNodeBtn').addEventListener('click', () => {
+      const node = document.createElement('div');
+      node.className = 'mind-node branch';
+      node.style.left = `${120 + Math.random() * 520}px`;
+      node.style.top = `${120 + Math.random() * 320}px`;
+      node.dataset.title = '新剧情节点';
+      node.dataset.type = '支线剧情';
+      node.dataset.desc = '这里是新建节点的说明，可以后续编辑。';
+      node.innerHTML = '<span class="node-type">支线</span><div class="node-title">新剧情节点</div><div class="node-desc">这里是新建节点的说明，可以后续编辑。</div>';
+      $('#mindCanvas').appendChild(node);
+      node.addEventListener('click', () => {
+        if (selectedNode) selectedNode.classList.remove('selected');
+        selectedNode = node;
+        node.classList.add('selected');
+        $('#nodeTitle').textContent = node.dataset.title;
+        $('#nodeDesc').textContent = node.dataset.desc;
+        $('#nodeTypeTag').textContent = node.dataset.type;
+        $('#nodeTitleInput').value = node.dataset.title;
+        $('#nodeDescInput').value = node.dataset.desc;
+      });
+      showToast('已新增导图节点');
+    });
+
+    $('#layoutBtn').addEventListener('click', () => showToast('自动整理导图：UI 演示'));
+    $('#fitBtn').addEventListener('click', () => showToast('已适应窗口：UI 演示'));
+    $('#syncMindBtn').addEventListener('click', () => showToast('后续将根据文字大纲生成导图'));
+
+    updateWordCount();
+  </script>
+</body>
+</html>

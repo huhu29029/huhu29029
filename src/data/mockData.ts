@@ -1,31 +1,38 @@
-import type { Chapter, Character, PlotThread, Project } from "../types/domain";
+import type { Chapter, Character, PlotThread, Project, Volume } from "../types/domain";
 
 export const demoProject: Project = {
   id: "project-demo",
   title: "示例长篇项目",
+  category: "玄幻小说",
   description: "用于展示软件骨架的本地项目",
+  coverPath: undefined,
   createdAt: "2026-05-26T00:00:00.000Z",
-  updatedAt: "2026-05-26T00:00:00.000Z"
+  updatedAt: "2026-05-26T00:00:00.000Z",
+  lastEditedAt: "2026-05-26T00:00:00.000Z"
 };
+
+export const demoVolumes: Volume[] = [
+  {
+    id: "volume-001",
+    projectId: demoProject.id,
+    title: "第一卷",
+    sortOrder: 0,
+    createdAt: "2026-05-26T00:00:00.000Z",
+    updatedAt: "2026-05-26T00:00:00.000Z"
+  }
+];
 
 export const demoChapters: Chapter[] = [
   {
     id: "chapter-001",
     projectId: demoProject.id,
-    title: "第一章 未命名的开端",
-    chapterIndex: 1,
-    content:
-      "这里是章节正文区域。第一阶段不会接入 AI，也不会替作者续写正文；后续可以在这里承载导入后的章节文本、人工编辑内容和摘要跳转。",
-    wordCount: 56
-  },
-  {
-    id: "chapter-002",
-    projectId: demoProject.id,
-    title: "第二章 线索出现",
-    chapterIndex: 2,
-    content:
-      "章节导航已经预留，后续可以接入自动分章、章节状态、摘要状态和一致性检查标记。",
-    wordCount: 38
+    volumeId: demoVolumes[0].id,
+    title: "第一章",
+    content: "这里是章节正文区。",
+    sortOrder: 0,
+    wordCount: 9,
+    createdAt: "2026-05-26T00:00:00.000Z",
+    updatedAt: "2026-05-26T00:00:00.000Z"
   }
 ];
 
@@ -33,19 +40,11 @@ export const demoCharacters: Character[] = [
   {
     id: "character-001",
     projectId: demoProject.id,
-    name: "林昭",
+    name: "林昀",
     role: "主角",
     currentState: "active",
-    lastSeenChapterId: "chapter-002",
-    notes: "等待后续角色状态追踪模块维护。"
-  },
-  {
-    id: "character-002",
-    projectId: demoProject.id,
-    name: "沈砚",
-    role: "关键配角",
-    currentState: "unknown",
-    lastSeenChapterId: "chapter-001"
+    lastSeenChapterId: "chapter-001",
+    notes: "等待后续角色状态模块维护。"
   }
 ];
 
