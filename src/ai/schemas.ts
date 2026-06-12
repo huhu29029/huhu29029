@@ -1336,7 +1336,7 @@ function normalizeWorldFactCategory(category: string, content: string) {
   if (["background", "history", "location", "era"].includes(raw)) return "background";
   if (/协会|教会|政府|学院|贵族|邪教|组织|制度|阶层|职业|监管|收容|家族|公会/.test(content)) return "social_structure";
   if (/魔法|魔女|巫师|等级|收容物|神明|眷属|血族|秘境|仪式|污染|梦境|能力|道具|魔导|超凡/.test(content)) return "power_system";
-  if (/主角|莉娜|身份|阶层|学徒|正式魔女|贫困|经济|收入|委托|阵营|所属|认证|等级/.test(content)) return "protagonist_position";
+  if (/主角|身份|阶层|学徒|正式魔女|贫困|经济|收入|委托|阵营|所属|认证|等级/.test(content)) return "protagonist_position";
   if (/新历|时代|城市|小镇|边境|王国|帝国|地区|世界/.test(content)) return "background";
   return raw || "other";
 }

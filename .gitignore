@@ -4,5 +4,13 @@ src-tauri/target/
 src-tauri/gen/
 *.log
 *.sqlite3
+*.sqlite
 *.db
+.env
+.env.*
+logs/
+*.docx
+*.doc
+*.txt
+*.nm-style.json
 .DS_Store
